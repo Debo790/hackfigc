@@ -43,6 +43,10 @@ public class Events {
 		qua = new ArrayList<>();
 	}
 	
+	public void addQualifier(Qualifier q){
+		qua.add(q);
+	}
+	
 	
 	
 	
