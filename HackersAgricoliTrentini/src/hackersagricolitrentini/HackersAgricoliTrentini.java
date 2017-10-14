@@ -47,29 +47,49 @@ public class HackersAgricoliTrentini {
 
 		String nodoTeam = "Team";
 
-		String country = "country";
-		String country_id = "country_id";
-		String country_iso = "country_iso";
-		String region_id = "region_id";
-		String region_name = "region_name";
-		String uID = "uID";
+			String country = "country";
+			String country_id = "country_id";
+			String country_iso = "country_iso";
+			String region_id = "region_id";
+			String region_name = "region_name";
+			String uID = "uID";
 
-		String nickName = "Nickname";
-		String name = "Name";
-		String fifarank = "FifaRank";
+			String nickName = "Nickname";
+			String name = "Name";
+			String fifarank = "FifaRank";
 
 		String Splayer = "Player";
 
-		String position = "Position";
-		String jersey_num = "jersey_num";
-		String stat = "stat";
+			String position = "Position";
+			String jersey_num = "jersey_num";
+			String stat = "stat";
 		
 		
 		String Sgames = "Games";
+		
 		String SGame = "Game";
+		
+			String Sid = "id";
+			String away_score = "away_score";
+			String away_team_id = "away_team_id";
+			String away_team_name = "away_team_name";
+			String competition_id = "competition_id";
+			String competition_name = "competition_name";
+			String game_date = "game_date";
+			String home_score = "home_score";
+			String home_team_id = "home_team_id";
+			String home_team_name = "home_team_name";
+			String matchday = "matchday";
+			String period_1_start = "period_1_start";
+			String period_2_start = "period_2_start";
+			String period_3_start = "period_3_start";
+			String period_4_start = "period_4_start";
+			String season_id = "season_id";
+			String season_name = "season_name";
 		
 		
 		String SEvent = "Event";
+			
 		
 		
 		String qualifier = "Q";
@@ -240,12 +260,30 @@ public class HackersAgricoliTrentini {
 			Node teamNode = null;
 			
 			
+			
 			for(int i=0; i<f.getLength(); i++){
 				if(f.item(i).getNodeName().equals(Sgames)){
 					realRoot = f.item(i);
 				}
 			}
 			
+			
+			f = realRoot.getChildNodes();
+			
+			
+			for(int i=0; i<f.getLength(); i++){
+				if(f.item(i).getNodeName().equals(SGame)){
+					
+					Node gam = f.item(i);
+					
+					NamedNodeMap GmapAtt = gam.getAttributes();
+					
+					//Node n_id = 
+					
+					
+					
+				}
+			}
 			
 			
 			

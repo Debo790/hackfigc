@@ -11,6 +11,12 @@ package beans;
  */
 public class Events {
 	
+	String id;
+	String event_id;
+	String type_id;
+	String period_id;
+	String min;
+	
 	
 	
 }
