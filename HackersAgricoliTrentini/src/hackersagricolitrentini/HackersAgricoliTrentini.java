@@ -5,6 +5,7 @@
  */
 package hackersagricolitrentini;
 
+import beans.Events;
 import beans.Game;
 import beans.Player;
 import beans.Team;
@@ -69,7 +70,7 @@ public class HackersAgricoliTrentini {
 		
 		String SGame = "Game";
 		
-			String Sid = "id";
+			String id = "id";
 			String away_score = "away_score";
 			String away_team_id = "away_team_id";
 			String away_team_name = "away_team_name";
@@ -89,7 +90,17 @@ public class HackersAgricoliTrentini {
 		
 		
 		String SEvent = "Event";
-			
+			//String id;
+			String event_id = "event_id";
+			String type_id = "type_id";
+			String period_id = "period_id";
+			String min = "min";
+			String sec = "sec";
+			String team_id = "team_id";
+			String outcome = "outcome";
+			String x = "x";
+			String y = "y";
+			String timestamp = "timestamp";
 		
 		
 		String qualifier = "Q";
@@ -97,7 +108,6 @@ public class HackersAgricoliTrentini {
 			
 		
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-		//dbf.setValidating(true); // optional – default is non-validating
 		DocumentBuilder db;
 		try {
 			db = dbf.newDocumentBuilder();
@@ -278,8 +288,176 @@ public class HackersAgricoliTrentini {
 					
 					NamedNodeMap GmapAtt = gam.getAttributes();
 					
-					//Node n_id = 
+					Node n_id = GmapAtt.getNamedItem(id);
+					String s_id = "";
+					if(n_id != null){
+						s_id = n_id.getNodeValue();
+					}
 					
+					
+					Node n_away_score = GmapAtt.getNamedItem(away_score);
+					String s_away_score = "";
+					if(n_away_score != null){
+						s_away_score = n_away_score.getNodeValue();
+					}
+					
+					Node n_away_team_id = GmapAtt.getNamedItem(away_team_id);
+					String s_away_team_id = "";
+					if(n_away_team_id != null){
+						s_away_team_id = n_away_team_id.getNodeValue();
+					}
+					
+					Node n_away_team_name = GmapAtt.getNamedItem(away_team_name);
+					String s_away_team_name = "";
+					if(n_away_team_name != null){
+						s_away_team_name = n_away_team_name.getNodeValue();
+					}
+					
+					Node n_competition_id = GmapAtt.getNamedItem(competition_id);
+					String s_competition_id = "";
+					if(n_competition_id != null){
+						s_competition_id = n_competition_id.getNodeValue();
+					}
+					
+					Node n_competition_name = GmapAtt.getNamedItem(competition_name);
+					String s_competition_name = "";
+					if(n_competition_name != null){
+						s_competition_name = n_competition_name.getNodeValue();
+					}
+					
+					Node n_game_date = GmapAtt.getNamedItem(game_date);
+					String s_game_date = "";
+					if(n_game_date != null){
+						s_game_date = n_game_date.getNodeValue();
+					}
+					
+					Node n_home_score = GmapAtt.getNamedItem(home_score);
+					String s_home_score = "";
+					if(n_home_score != null){
+						s_home_score = n_home_score.getNodeValue();
+					}
+					
+					Node n_home_team_id = GmapAtt.getNamedItem(home_team_id);
+					String s_home_team_id = "";
+					if(n_home_team_id != null){
+						s_home_team_id = n_home_team_id.getNodeValue();
+					}
+					
+					Node n_home_team_name = GmapAtt.getNamedItem(home_team_name);
+					String s_home_team_name = "";
+					if(n_home_team_name != null){
+						s_home_team_name = n_home_team_name.getNodeValue();
+					}
+					
+					Node n_matchday = GmapAtt.getNamedItem(matchday);
+					String s_matchday = "";
+					if(n_matchday != null){
+						s_matchday = n_matchday.getNodeValue();
+					}
+					
+					Node n_season_id = GmapAtt.getNamedItem(season_id);
+					String s_season_id = "";
+					if(n_season_id != null){
+						s_season_id = n_season_id.getNodeValue();
+					}
+					
+					Node n_season_name = GmapAtt.getNamedItem(season_name);
+					String s_season_name = "";
+					if(n_season_name != null){
+						s_season_name = n_season_name.getNodeValue();
+					}
+					
+					
+					Game current_game = new Game(s_id, s_away_score, 
+							s_away_team_id, s_away_team_name, 
+							s_competition_id, s_competition_name, 
+							s_game_date, s_home_score, 
+							s_home_team_id, s_home_team_name, 
+							s_matchday, s_season_id, s_season_name);
+					
+					games.add(current_game);
+					
+					NodeList listaEventi = gam.getChildNodes();
+					
+					for(int j=0; j<listaEventi.getLength(); j++){
+						if(listaEventi.item(j).equals(SEvent)){
+							
+							NamedNodeMap EvAtt = listaEventi.item(j).getAttributes();
+							
+							Node n_Eid = EvAtt.getNamedItem(id);
+							String s_Eid = "";
+							if(n_Eid != null){
+								s_Eid = n_Eid.getNodeValue();
+							}
+							
+							Node n_event_id = EvAtt.getNamedItem(event_id);
+							String s_event_id = "";
+							if(n_event_id != null){
+								s_event_id = n_event_id.getNodeValue();
+							}
+							Node n_type_id = EvAtt.getNamedItem(type_id);
+							String s_type_id = "";
+							if(n_type_id != null){
+								s_type_id = n_type_id.getNodeValue();
+							}
+							Node n_period_id = EvAtt.getNamedItem(period_id);
+							String s_period_id = "";
+							if(n_period_id != null){
+								s_period_id = n_period_id.getNodeValue();
+							}
+							Node n_min = EvAtt.getNamedItem(min);
+							String s_min = "";
+							if(n_min != null){
+								s_min = n_min.getNodeValue();
+							}
+							Node n_sec = EvAtt.getNamedItem(sec);
+							String s_sec = "";
+							if(n_sec != null){
+								s_sec = n_sec.getNodeValue();
+							}
+							
+							Node n_team_id = EvAtt.getNamedItem(team_id);
+							String s_team_id = "";
+							if(n_team_id != null){
+								s_team_id = n_team_id.getNodeValue();
+							}
+							Node n_outcome = EvAtt.getNamedItem(outcome);
+							String s_outcome = "";
+							if(n_outcome != null){
+								s_outcome = n_outcome.getNodeValue();
+							}
+							Node n_x = EvAtt.getNamedItem(x);
+							String s_x = "";
+							if(n_x != null){
+								s_x = n_x.getNodeValue();
+							}
+							Node n_y = EvAtt.getNamedItem(y);
+							String s_y = "";
+							if(n_y != null){
+								s_y = n_y.getNodeValue();
+							}
+							Node n_timestamp = EvAtt.getNamedItem(timestamp);
+							String s_timestamp = "";
+							if(n_timestamp != null){
+								s_timestamp = n_timestamp.getNodeValue();
+							}
+							
+							Events evento_partita = new Events(s_Eid, s_event_id, 
+									s_type_id, s_period_id, 
+									s_min, s_sec, s_team_id, 
+									s_outcome, s_x, s_y, 
+									s_timestamp);
+							
+							current_game.addEvent(evento_partita);
+							
+							//sono qui
+							
+							//NodeList listaQueali = 
+							
+							
+							
+						}
+					}
 					
 					
 				}
