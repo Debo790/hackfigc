@@ -8,6 +8,7 @@ package hackersagricolitrentini;
 import beans.Events;
 import beans.Game;
 import beans.Player;
+import beans.Qualifier;
 import beans.Team;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -16,7 +17,9 @@ import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import org.w3c.dom.CharacterData;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -63,7 +66,8 @@ public class HackersAgricoliTrentini {
 
 			String position = "Position";
 			String jersey_num = "jersey_num";
-			String stat = "stat";
+			String stat = "Stat";
+			String type = "Type";
 		
 		
 		String Sgames = "Games";
@@ -104,6 +108,11 @@ public class HackersAgricoliTrentini {
 		
 		
 		String qualifier = "Q";
+			//String id;
+			String qualifier_id = "qualifier_id";
+			String value = "value";
+		
+		
 		
 			
 		
@@ -197,14 +206,15 @@ public class HackersAgricoliTrentini {
 								Node work = pla.item(j);
 								
 								if(work.getNodeName().equals(nickName)){
-									team.setNickname(work.getNodeName());
+									//.out.println(getCharacterDataFromElement(work));
+									team.setNickname(getCharacterDataFromElement(work));
 								}
 								else if(work.getNodeName().equals(name)){
 									//team.setNickname(work.getNodeName());
 									//non so cosa farmene
 								}
 								else if(work.getNodeName().equals(fifarank)){
-									team.setFifaRank(fifarank);
+									team.setFifaRank(getCharacterDataFromElement(work));
 								}
 								
 								else if(work.getNodeName().equals(Splayer)){
@@ -227,16 +237,25 @@ public class HackersAgricoliTrentini {
 									for(int g=0; g<plaChild.getLength(); g++){
 										
 										if(plaChild.item(g).getNodeName().equals(name)){
-											player.setName(plaChild.item(g).getNodeValue());
+											//System.out.println(getCharacterDataFromElement(plaChild.item(g)));
+											player.setName(getCharacterDataFromElement(plaChild.item(g)));
+											
+											plaChild.item(g).getTextContent();
 										}
 										if(plaChild.item(g).getNodeName().equals(position)){
-											player.setPosition(plaChild.item(g).getNodeValue());
+											player.setPosition(getCharacterDataFromElement(plaChild.item(g)));
 										}
 										
 										if(plaChild.item(g).getNodeName().equals(stat)){
-											Node in_work = plaChild.item(g).getAttributes().getNamedItem(jersey_num);
+											NamedNodeMap mm = plaChild.item(g).getAttributes();
+											
+											
+											Node in_work = mm.getNamedItem(type);
 											if(in_work != null){
-												player.setPosition(in_work.getNodeValue());
+												
+												if(in_work.getNodeValue().equals(jersey_num)){
+													player.setNum(getCharacterDataFromElement(plaChild.item(g)));
+												}
 											}
 										}
 										
@@ -257,6 +276,8 @@ public class HackersAgricoliTrentini {
 		} catch (IOException ex) {
 			Logger.getLogger(HackersAgricoliTrentini.class.getName()).log(Level.SEVERE, null, ex);
 		}
+		
+		System.out.println("");
 		
 		try {
 			db = dbf.newDocumentBuilder();
@@ -380,7 +401,7 @@ public class HackersAgricoliTrentini {
 					NodeList listaEventi = gam.getChildNodes();
 					
 					for(int j=0; j<listaEventi.getLength(); j++){
-						if(listaEventi.item(j).equals(SEvent)){
+						if(listaEventi.item(j).getNodeName().equals(SEvent)){
 							
 							NamedNodeMap EvAtt = listaEventi.item(j).getAttributes();
 							
@@ -450,9 +471,44 @@ public class HackersAgricoliTrentini {
 							
 							current_game.addEvent(evento_partita);
 							
-							//sono qui
 							
-							//NodeList listaQueali = 
+							
+							NodeList listaQuali = listaEventi.item(j).getChildNodes();
+							
+							for(int g =0; g<listaQuali.getLength(); g++){
+								
+								if(listaQuali.item(g).getNodeName().equals(qualifier)){
+									
+									NamedNodeMap QuaAtt = listaQuali.item(g).getAttributes();
+									
+									Node n_Qid = QuaAtt.getNamedItem(id);
+									String s_Qid = "";
+									if(n_Qid != null){
+										s_Qid = n_Qid.getNodeValue();
+									}
+									
+									Node n_qualifier_id = QuaAtt.getNamedItem(qualifier_id);
+									String s_qualifier_id = "";
+									if(n_qualifier_id != null){
+										s_qualifier_id = n_qualifier_id.getNodeValue();
+									}
+									
+									Node n_value = QuaAtt.getNamedItem(value);
+									String s_value = "";
+									if(n_value != null){
+										s_value = n_value.getNodeValue();
+									}
+									
+									
+									Qualifier qual = new Qualifier(s_Qid, s_qualifier_id, s_value);
+									
+									evento_partita.addQualifier(qual);
+									
+									
+									
+								}
+								
+							}
 							
 							
 							
@@ -478,9 +534,18 @@ public class HackersAgricoliTrentini {
 		
 		
 		
-		
+		System.out.println("");
 		
 		
 	}
 	
+	
+	public static String getCharacterDataFromElement(Node e) {
+		Node child = e.getFirstChild();
+		if (child instanceof CharacterData) {
+		  CharacterData cd = (CharacterData) child;
+		  return cd.getData();
+		}
+		return "";
+	  }
 }
