@@ -103,6 +103,7 @@ public class HackersAgricoliTrentini {
 			String x = "x";
 			String y = "y";
 			String timestamp = "timestamp";
+			String player_id = "player_id";
 		
 		
 		String qualifier = "Q";
@@ -452,12 +453,18 @@ public class HackersAgricoliTrentini {
 									if(n_timestamp != null){
 										s_timestamp = n_timestamp.getNodeValue();
 									}
+									
+									Node n_player_id = EvAtt.getNamedItem(player_id);
+									String s_player_id = "";
+									if(n_player_id != null){
+										s_player_id = n_player_id.getNodeValue();
+									}
 
 									Events evento_partita = new Events(s_Eid, s_event_id, 
 											s_type_id, s_period_id, 
 											s_min, s_sec, s_team_id, 
 											s_outcome, s_x, s_y, 
-											s_timestamp);
+											s_timestamp, s_player_id);
 
 									current_game.addEvent(evento_partita);
 									
@@ -512,20 +519,197 @@ public class HackersAgricoliTrentini {
 		
 		
 		
-		
-		
 		System.out.println("");
 		
 		
 		//adesso analisi^^
 		
 		
-		HashMap<Integer, Integer> mappaValoriEventi = new HashMap<Integer, Integer>();
+		
+		HashMap<Values, Double> mappaValoriEventi  = new HashMap<Values, Double>();
 		
 		
 		
+		loadHashMap(mappaValoriEventi);
+		
+		//carico anche i cosi di qualifier
 		
 		
+		for(int i=0; i<games.size(); i++){
+			
+			Game on_work = games.get(i);
+			
+			ArrayList<Events> event_on_work = on_work.getEventi();
+			
+			for(int j = 0; j < event_on_work.size(); j++){
+				
+				double partialCount = 0;
+				
+				Events ev_work = event_on_work.get(j);
+				
+				String play_id = ev_work.getPlayer_id();
+				
+				
+				double Ix_position = Double.parseDouble(ev_work.getX());
+				double Iy_position = Double.parseDouble(ev_work.getY());
+				
+				int Ievent_id = Integer.parseInt(ev_work.getEvent_id());
+				
+				int Ioutcome = Integer.parseInt(ev_work.getOutcome());
+				
+				Values v = new Values(Ievent_id, Ioutcome, positionRemapping(Ix_position));
+				
+				partialCount = mappaValoriEventi.get(v);
+				
+				switch(Ievent_id){
+					case 10:
+						
+						String value_from_qua = findValuefromQuID("233", ev_work.getQua());
+						
+						//int Ivalue_from_qua = Integer.parseInt(value_from_qua);
+						
+						Events start_event = findeventbyID(value_from_qua, event_on_work);
+						
+						//recuperare evente provocatorio
+						//calcolare coordinate
+						
+						double IBx_position = Double.parseDouble(start_event.getX());
+						double IBy_position = Double.parseDouble(start_event.getY());
+						
+						//distanza calcolo
+						
+						double distance = Math.sqrt((Ix_position - IBx_position)*(Ix_position - IBx_position)
+								+(Iy_position - IBy_position)*(Iy_position - IBy_position));
+						
+						//riscalatura tra 33 -> 0.5 e 10->1.5
+						
+						double dis_scalata;
+						
+						if(distance > 33){
+							dis_scalata = 33;
+						}
+						else if(distance < 10){
+							dis_scalata = 10;
+						}
+						else{
+							dis_scalata = distance-10;
+						}
+						
+						double coeff = (1/23)*(1-dis_scalata);
+						
+						//ricalcolo
+						
+						
+						partialCount = partialCount *coeff;
+						//finito
+						break;
+					
+					case 13:
+					case 14: 
+						
+						double Bx_position = 100.0;
+						double By_position = 50.0;
+						
+						distance = Math.sqrt((Ix_position - Bx_position)*(Ix_position - Bx_position)
+								+(Iy_position - By_position)*(Iy_position - By_position));
+						
+						//dis_scalata;
+						
+						if(distance > 33){
+							dis_scalata = 33;
+						}
+						else if(distance < 10){
+							dis_scalata = 10;
+						}
+						else{
+							dis_scalata = distance-10;
+						}
+						
+						coeff = (1/23)*(1-dis_scalata);
+						
+						partialCount = partialCount *coeff;
+						
+						break;
+					
+					case 15:
+						
+						value_from_qua = findValuefromQuID("233", ev_work.getQua());
+						
+						//int Ivalue_from_qua = Integer.parseInt(value_from_qua);
+						
+						start_event = findeventbyID(value_from_qua, event_on_work);
+						
+						//recuperare evente provocatorio
+						//calcolare coordinate
+						
+						IBx_position = Double.parseDouble(start_event.getX());
+						IBy_position = Double.parseDouble(start_event.getY());
+						
+						//distanza calcolo
+						
+						distance = Math.sqrt((Ix_position - IBx_position)*(Ix_position - IBx_position)
+								+(Iy_position - IBy_position)*(Iy_position - IBy_position));
+						
+						//riscalatura tra 33 -> 0.5 e 10->1.5
+						
+						//dis_scalata;
+						
+						if(distance > 33){
+							dis_scalata = 33;
+						}
+						else if(distance < 10){
+							dis_scalata = 10;
+						}
+						else{
+							dis_scalata = distance-10;
+						}
+						
+						coeff = (1/23)*(dis_scalata);
+						
+						//ricalcolo
+						
+						
+						partialCount = partialCount *coeff;
+						//finito
+						break;
+					
+				}
+				
+				
+				
+				
+				
+				
+				
+				
+				
+			}
+			
+			
+		}
+		
+		
+		
+	}
+	
+	
+	public static Events findeventbyID(String id_event, ArrayList<Events> list){
+		for(int i=0; i<list.size(); i++){
+			if(list.get(i).getId().equals(id_event)){
+				return list.get(i);
+			}	
+		}
+		return null;
+		
+	}
+	
+	public static String findValuefromQuID(String qualifierID, ArrayList<Qualifier> qua){
+		for(int i=0; i<qua.size(); i++){
+			if(qua.get(i).getQualifier_id().equals(qualifierID)){
+				return qua.get(i).getValue();
+			}
+		}
+		return "";
 	}
 	
 	
@@ -537,6 +721,19 @@ public class HackersAgricoliTrentini {
 		}
 		return "";
 	 }
+	
+	public static int positionRemapping(double x){
+		if(x <= 33){
+			return 1;
+		}
+		else if(x >= 34 && x <=66){
+			return 2;
+		}
+		else if(x >66){
+			return 3;
+		}
+		return 0;
+	}
 	
 	public static void loadHashMap(HashMap<Values, Double> mappaValoriEventi){
 		

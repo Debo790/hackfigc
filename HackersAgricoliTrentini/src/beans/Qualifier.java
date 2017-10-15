@@ -20,6 +20,21 @@ public class Qualifier {
 		this.qualifier_id = qualifier_id;
 		this.value = value;
 	}
+
+	public String getId() {
+		return id;
+	}
+
+	public String getQualifier_id() {
+		return qualifier_id;
+	}
+
+	public String getValue() {
+		return value;
+	}
+	
+	
+	
 	
 	
 	

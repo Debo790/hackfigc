@@ -52,4 +52,10 @@ public class Game {
 		eventi.add(ev);
 	}
 
+	public ArrayList<Events> getEventi() {
+		return eventi;
+	}
+	
+	
+
 }
