@@ -586,16 +586,18 @@ public class HackersAgricoliTrentini {
 			
 			mappaValoriEventi.put(new Values(52, 1, 0), 0.2); //palla recuperata dal portiere
 			
-			mappaValoriEventi.put(new Values(53, 0, 0), -2); //cross sbagliato
+			mappaValoriEventi.put(new Values(53, 0, 0), -2); //portiere si fa superare da un cross
 			
 			mappaValoriEventi.put(new Values(55, 1, 0), 2); //il difensore ha il merito di aver messo in fuorigioco l'attaccante
 			
-			mappaValoriEventi.put(new Values(58, 1, 0), 4); //gol su rigore parato
-			mappaValoriEventi.put(new Values(58, 0, 0), -4); //gol su rigore subito
+			mappaValoriEventi.put(new Values(58, 1, 0), 0); //gol su rigore parato
+			mappaValoriEventi.put(new Values(58, 0, 0), 0); //gol su rigore subito
 			
 			mappaValoriEventi.put(new Values(60, 1, 0), 1.5); //giocatore in ottima posizione per segnare ma il passaggio diretto a lui viene sbagliato
 			
 			mappaValoriEventi.put(new Values(74, 1, 0), 0.4); //passaggio bloccato
+			
+			mappaValoriEventi.put(new Values(2, 0, 0), -0.5); //passaggio effettuato verso un giocatore in fuorigioco
 			
 			
 		}
@@ -604,5 +606,57 @@ public class HackersAgricoliTrentini {
 		}
 	}
 	
-	
+	public void loadHashMap2(HashMap<QValues, Double> mappaValoriQualifier){
+		
+		if(mappaValoriQUalifiers != null){
+		
+			mappaValoriQualifiers.put(new QValues(1, 1), 0.3); //passaggio lungo riuscito
+			mappaValoriQualifiers.put(new QValues(1, 0), -0.3); // passaggio lungo non riuscito
+		
+			mappaValoriQualifiers.put(new QValues(2, 1), 0.4); //cross riuscito
+			mappaValoriQualifiers.put(new QValues(2, 0), -0.4); //cross non riuscito
+		
+			mappaValoriQualifiers.put(new QValues(4, 1), 0.5); 
+			mappaValoriQualifiers.put(new QValues(4, 0), -0.2);
+		
+			mappaValoriQualifiers.put(new QValues(7, 0), -1.0); //giocatore pescato in fuorigioco
+		
+			mappaValoriQualifiers.put(new QValues(215, 1), 1.5); //giocata individuale
+		
+			mappaValoriQualifiers.put(new QValues(3, 1), 0.1); //punizione procurata
+		
+			mappaValoriQualifiers.put(new QValues(196, 1), 0.1); //cambio di gioco riuscito
+			mappaValoriQualifiers.put(new QValues(196, 0), -0.1); //cambio di gioco non riuscito
+		
+			mappaValoriQualifiers.put(new QValues(210, 1), 2.0); // assist
+		
+			mappaValoriQualifiers.put(new QValues(236, 0), -0.4); //passaggio bloccato
+		
+			mappaValoriQualifiers.put(new QValues(28, 0), -4.0); //autogol
+		
+			mappaValoriQualifiers.put(new QValues(254, 1), 0.5); //bonus al gol (preceduto da dribbling)
+		
+			mappaValoriQualifiers.put(new QValues(261, 1), 0.25); //bonus al gol (uno contro uno col portiere)
+		
+			mappaValoriQualifiers.put(new QValues(328, 1), 0.25); //bonus al gol (tiro di prima)
+		
+			mappaValoriQualifiers.put(new QValues(101, 1), 2.5); //gol salvato sulla linea
+		
+			mappaValoriQualifiers.put(new QValues(31, 0), -0.5); //cartellino giallo
+		
+			mappaValoriQualifiers.put(new QValues(32, 0), -1.5); //secondo cartellino giallo
+		
+			mappaValoriQualifiers.put(new QValues(33, 0), -2.5); //cartellino rosso
+		
+			mappaValoriQualifiers.put(new QValues(186, 1), 4.0); //gol su rigore parato
+		
+			mappaValoriQualifiers.put(new QValues(187, 0), -4.0); //gol su rigore subito
+		
+			mappaValoriQualifiers.put(new QValues(169, 0), -1.5); 
+		
+			mappaValoriQualifiers.put(new QValues(170, 0), -2.5);
+			
+		}
+		
+	}
 }
