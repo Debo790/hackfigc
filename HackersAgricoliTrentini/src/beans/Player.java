@@ -18,7 +18,7 @@ public class Player {
 	String position;
 	String num;
 	
-	ArrayList<Integer> scores;
+	ArrayList<Double> scores;
 	
 
 	public Player(String uID) {
@@ -57,4 +57,10 @@ public class Player {
 	public String getPosition() {
 		return position;
 	}
+
+	public ArrayList<Double> getScores() {
+		return scores;
+	}
+	
+	
 }

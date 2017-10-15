@@ -185,6 +185,7 @@ public class HackersAgricoliTrentini {
 							String uS_id = "";
 							if(u_id != null){
 								uS_id = u_id.getNodeValue();
+								uS_id = uS_id.substring(1);
 							}
 							
 							Team team = new Team(cS, cS_id, cS_iso, rS_id, rS_name, uS_id);
@@ -218,6 +219,7 @@ public class HackersAgricoliTrentini {
 									String pS_uid = "";
 									if(u_id != null){
 										pS_uid = p_uid.getNodeValue();
+										pS_uid = pS_uid.substring(1);
 									}
 									
 									Player player = new Player(pS_uid);
@@ -527,10 +529,11 @@ public class HackersAgricoliTrentini {
 		
 		
 		HashMap<Values, Double> mappaValoriEventi  = new HashMap<Values, Double>();
-		
+		HashMap<QValues, Double> mappaValoriQuali  = new HashMap<QValues, Double>();
 		
 		
 		loadHashMap(mappaValoriEventi);
+		
 		
 		//carico anche i cosi di qualifier
 		
@@ -549,6 +552,8 @@ public class HackersAgricoliTrentini {
 				
 				String play_id = ev_work.getPlayer_id();
 				
+				addScoreToPlayer(play_id, players);
+				
 				
 				double Ix_position = Double.parseDouble(ev_work.getX());
 				double Iy_position = Double.parseDouble(ev_work.getY());
@@ -559,9 +564,17 @@ public class HackersAgricoliTrentini {
 				
 				Values v = new Values(Ievent_id, Ioutcome, positionRemapping(Ix_position));
 				
-				partialCount = mappaValoriEventi.get(v);
+				partialCount = partialCount + mappaValoriEventi.get(v);
 				
 				switch(Ievent_id){
+					case 2: 
+						
+						String pla_id = findValuefromQuID("7", ev_work.getQua());
+						
+						addPointToPlayer(pla_id, -1.0, players);
+						
+						break;
+					
 					case 10:
 						
 						String value_from_qua = findValuefromQuID("233", ev_work.getQua());
@@ -675,23 +688,50 @@ public class HackersAgricoliTrentini {
 					
 				}
 				
+				ArrayList<Qualifier> ev_qual = ev_work.getQua();
+				for(int g =0; g<ev_qual.size(); g++){
+					
+					Qualifier q = ev_qual.get(g);
+					
+					int qid = Integer.parseInt(q.getQualifier_id());
+					
+					QValues qv = new QValues(qid, Ioutcome);
+					
+					double result = mappaValoriQuali.get(qv);
+					
+					partialCount = partialCount + result;
+				}
 				
-				
-				
-				
-				
-				
-				
+				//somma effettiva del punteggio
+				addPointToPlayer(play_id, partialCount, players);
 				
 			}
 			
-			
 		}
 		
-		
+		printResult(players);
 		
 	}
 	
+	
+	public static void addPointToPlayer(String id_player, double val, ArrayList<Player> lis){
+		for(int i=0; i<lis.size(); i++){
+			if(lis.get(i).getuID().equals(id_player)){
+				int g = lis.get(i).getScores().size();
+				double ne = lis.get(i).getScores().get(g) + val;
+				lis.get(i).getScores().add(g, ne);
+			}
+		}
+	}
+	
+	public static void addScoreToPlayer(String id_player, ArrayList<Player> lis){
+		for(int i=0; i<lis.size(); i++){
+			if(lis.get(i).getuID().equals(id_player)){
+				lis.get(i).getScores().add(0.0);
+			}
+		}
+		
+	}
 	
 	public static Events findeventbyID(String id_event, ArrayList<Events> list){
 		for(int i=0; i<list.size(); i++){
@@ -735,6 +775,21 @@ public class HackersAgricoliTrentini {
 		return 0;
 	}
 	
+	public static void printResult(ArrayList<Player> l){
+		
+		for(int i=0; i<l.size(); i++){
+			ArrayList<Double> scores = l.get(i).getScores();
+			if(scores.size()>0){
+				System.out.print(l.get(i).getName() + ":" );
+				for(int j=0; j<scores.size(); j++){
+					System.out.print(scores.get(j) + " , ");
+				}
+				System.out.println(" ");
+			}
+		}
+		
+	}
+	
 	public static void loadHashMap(HashMap<Values, Double> mappaValoriEventi){
 		
 		if(mappaValoriEventi != null){
@@ -766,9 +821,39 @@ public class HackersAgricoliTrentini {
 			mappaValoriEventi.put(new Values(15, 1, 0), 1.0); //attempt saved 
 			
 			mappaValoriEventi.put(new Values(16, 1, 0), 1.0); //goal
+			
+			mappaValoriEventi.put(new Values(17, 1, 0), 0.0); // cartellini. rimanda ai qualifier
+			
+			mappaValoriEventi.put(new Values(44, 1, 0), 0.5); //scontro aereo vinto
+			mappaValoriEventi.put(new Values(44, 0, 0), -0.5); //scontro aereo perso
+			
+			mappaValoriEventi.put(new Values(45, 0, 0), -0.75); //dribbling subito
+			
+			mappaValoriEventi.put(new Values(49, 1, 0), 0.2); //palla recuperata
+			
+			mappaValoriEventi.put(new Values(50, 0, 0), -0.5); //perso il possesso della palla
+			
+			mappaValoriEventi.put(new Values(51, 0, 0), -2.0); //errore: il valore va moltiplicato per i quantifiers
+			
+			mappaValoriEventi.put(new Values(52, 1, 0), 0.2); //palla recuperata dal portiere
+			
+			mappaValoriEventi.put(new Values(53, 0, 0), -2.0); //cross sbagliato
+			
+			mappaValoriEventi.put(new Values(55, 1, 0), 2.0); //il difensore ha il merito di aver messo in fuorigioco l'attaccante
+			
+			mappaValoriEventi.put(new Values(58, 1, 0), 4.0); //gol su rigore parato
+			mappaValoriEventi.put(new Values(58, 0, 0), -4.0); //gol su rigore subito
+			
+			mappaValoriEventi.put(new Values(60, 1, 0), 1.5); //giocatore in ottima posizione per segnare ma il passaggio diretto a lui viene sbagliato
+			
+			mappaValoriEventi.put(new Values(74, 1, 0), 0.4); //passaggio bloccato
+			
+			
 		}
 		else{	
 			return;
 		}
 	}
+	
+	
 }
