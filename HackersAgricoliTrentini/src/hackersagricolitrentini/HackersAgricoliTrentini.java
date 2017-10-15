@@ -569,6 +569,34 @@ public class HackersAgricoliTrentini {
 			mappaValoriEventi.put(new Values(15, 1, 0), 1.0); //attempt saved 
 			
 			mappaValoriEventi.put(new Values(16, 1, 0), 1.0); //goal
+			
+			mappaValoriEventi.put(new Values(17, 1, 0), 0.0); // cartellini. rimanda ai qualifier
+			
+			mappaValoriEventi.put(new Values(44, 1, 0), 0,5); //scontro aereo vinto
+			mappaValoriEventi.put(new Values(44, 0, 0), -0,5); //scontro aereo perso
+			
+			mappaValoriEventi.put(new Values(45, 0, 0), -0.75); //dribbling subito
+			
+			mappaValoriEventi.put(new Values(49, 1, 0), 0.2); //palla recuperata
+			
+			mappaValoriEventi.put(new Values(50, 0, 0), -0.5); //perso il possesso della palla
+			
+			mappaValoriEventi.put(new Values(51, 0, 0), -2); //errore: il valore va moltiplicato per i quantifiers
+			
+			mappaValoriEventi.put(new Values(52, 1, 0), 0.2); //palla recuperata dal portiere
+			
+			mappaValoriEventi.put(new Values(53, 0, 0), -2); //cross sbagliato
+			
+			mappaValoriEventi.put(new Values(55, 1, 0), 2); //il difensore ha il merito di aver messo in fuorigioco l'attaccante
+			
+			mappaValoriEventi.put(new Values(58, 1, 0), 4); //gol su rigore parato
+			mappaValoriEventi.put(new Values(58, 0, 0), -4); //gol su rigore subito
+			
+			mappaValoriEventi.put(new Values(60, 1, 0), 1.5); //giocatore in ottima posizione per segnare ma il passaggio diretto a lui viene sbagliato
+			
+			mappaValoriEventi.put(new Values(74, 1, 0), 0.4); //passaggio bloccato
+			
+			
 		}
 		else{	
 			return;
