@@ -21,6 +21,21 @@ public class Values {
 		this.outcome = outcome;
 		this.value_x = value_x;
 	}
+
+	@Override
+	public int hashCode() {
+		
+		return event_id*100+outcome*10+value_x*1;
+		
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		
+		return this.hashCode() == obj.hashCode();
+	}
+	
+	
 	
 	
 	

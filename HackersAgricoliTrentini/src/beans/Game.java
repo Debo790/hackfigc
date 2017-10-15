@@ -55,6 +55,58 @@ public class Game {
 	public ArrayList<Events> getEventi() {
 		return eventi;
 	}
+
+	public String getAway_score() {
+		return away_score;
+	}
+
+	public String getAway_team_id() {
+		return away_team_id;
+	}
+
+	public String getAway_team_name() {
+		return away_team_name;
+	}
+
+	public String getCompetition_id() {
+		return competition_id;
+	}
+
+	public String getCompetition_name() {
+		return competition_name;
+	}
+
+	public String getGame_date() {
+		return game_date;
+	}
+
+	public String getHome_score() {
+		return home_score;
+	}
+
+	public String getHome_team_id() {
+		return home_team_id;
+	}
+
+	public String getHome_team_name() {
+		return home_team_name;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public String getMatchday() {
+		return matchday;
+	}
+
+	public String getSeason_id() {
+		return season_id;
+	}
+
+	public String getSeason_name() {
+		return season_name;
+	}
 	
 	
 

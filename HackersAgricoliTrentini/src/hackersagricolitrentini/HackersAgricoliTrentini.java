@@ -533,6 +533,7 @@ public class HackersAgricoliTrentini {
 		
 		
 		loadHashMap(mappaValoriEventi);
+		loadHashMap2(mappaValoriQuali);
 		
 		
 		//carico anche i cosi di qualifier
@@ -540,9 +541,12 @@ public class HackersAgricoliTrentini {
 		
 		for(int i=0; i<games.size(); i++){
 			
+			System.out.println(games.size());
+			
 			Game on_work = games.get(i);
 			
 			ArrayList<Events> event_on_work = on_work.getEventi();
+			
 			
 			for(int j = 0; j < event_on_work.size(); j++){
 				
@@ -552,160 +556,62 @@ public class HackersAgricoliTrentini {
 				
 				String play_id = ev_work.getPlayer_id();
 				
-				addScoreToPlayer(play_id, players);
+				//addScoreToPlayer(play_id, players);
 				
 				
 				double Ix_position = Double.parseDouble(ev_work.getX());
 				double Iy_position = Double.parseDouble(ev_work.getY());
 				
-				int Ievent_id = Integer.parseInt(ev_work.getEvent_id());
+				int Ievent_id = Integer.parseInt(ev_work.getType_id());
 				
 				int Ioutcome = Integer.parseInt(ev_work.getOutcome());
 				
 				Values v = new Values(Ievent_id, Ioutcome, positionRemapping(Ix_position));
+				Values v2 = new Values(Ievent_id, Ioutcome, 0);
 				
-				partialCount = partialCount + mappaValoriEventi.get(v);
+				if(mappaValoriEventi.get(v) != null || mappaValoriEventi.get(v2) != null){
+					double valll = 0.0;
+					
+					if(mappaValoriEventi.get(v) != null){
+						valll = mappaValoriEventi.get(v);
+					}
+					
+					if(mappaValoriEventi.get(v2) != null){
+						valll = mappaValoriEventi.get(v2);
+					}
+					
 				
-				switch(Ievent_id){
-					case 2: 
-						
-						String pla_id = findValuefromQuID("7", ev_work.getQua());
-						
-						addPointToPlayer(pla_id, -1.0, players);
-						
-						break;
+					partialCount = partialCount + valll;
+
 					
-					case 10:
-						
-						String value_from_qua = findValuefromQuID("233", ev_work.getQua());
-						
-						//int Ivalue_from_qua = Integer.parseInt(value_from_qua);
-						
-						Events start_event = findeventbyID(value_from_qua, event_on_work);
-						
-						//recuperare evente provocatorio
-						//calcolare coordinate
-						
-						double IBx_position = Double.parseDouble(start_event.getX());
-						double IBy_position = Double.parseDouble(start_event.getY());
-						
-						//distanza calcolo
-						
-						double distance = Math.sqrt((Ix_position - IBx_position)*(Ix_position - IBx_position)
-								+(Iy_position - IBy_position)*(Iy_position - IBy_position));
-						
-						//riscalatura tra 33 -> 0.5 e 10->1.5
-						
-						double dis_scalata;
-						
-						if(distance > 33){
-							dis_scalata = 33;
-						}
-						else if(distance < 10){
-							dis_scalata = 10;
-						}
-						else{
-							dis_scalata = distance-10;
-						}
-						
-						double coeff = (1/23)*(1-dis_scalata);
-						
-						//ricalcolo
-						
-						
-						partialCount = partialCount *coeff;
-						//finito
-						break;
 					
-					case 13:
-					case 14: 
-						
-						double Bx_position = 100.0;
-						double By_position = 50.0;
-						
-						distance = Math.sqrt((Ix_position - Bx_position)*(Ix_position - Bx_position)
-								+(Iy_position - By_position)*(Iy_position - By_position));
-						
-						//dis_scalata;
-						
-						if(distance > 33){
-							dis_scalata = 33;
+					ArrayList<Qualifier> ev_qual = ev_work.getQua();
+					for(int g =0; g<ev_qual.size(); g++){
+
+						Qualifier q = ev_qual.get(g);
+
+						int qid = Integer.parseInt(q.getQualifier_id());
+
+						QValues qv = new QValues(qid, Ioutcome);
+
+						if(mappaValoriQuali.get(qv) != null){
+
+							double result = mappaValoriQuali.get(qv);
+
+							partialCount = partialCount + result;
 						}
-						else if(distance < 10){
-							dis_scalata = 10;
-						}
-						else{
-							dis_scalata = distance-10;
-						}
-						
-						coeff = (1/23)*(1-dis_scalata);
-						
-						partialCount = partialCount *coeff;
-						
-						break;
-					
-					case 15:
-						
-						value_from_qua = findValuefromQuID("233", ev_work.getQua());
-						
-						//int Ivalue_from_qua = Integer.parseInt(value_from_qua);
-						
-						start_event = findeventbyID(value_from_qua, event_on_work);
-						
-						//recuperare evente provocatorio
-						//calcolare coordinate
-						
-						IBx_position = Double.parseDouble(start_event.getX());
-						IBy_position = Double.parseDouble(start_event.getY());
-						
-						//distanza calcolo
-						
-						distance = Math.sqrt((Ix_position - IBx_position)*(Ix_position - IBx_position)
-								+(Iy_position - IBy_position)*(Iy_position - IBy_position));
-						
-						//riscalatura tra 33 -> 0.5 e 10->1.5
-						
-						//dis_scalata;
-						
-						if(distance > 33){
-							dis_scalata = 33;
-						}
-						else if(distance < 10){
-							dis_scalata = 10;
-						}
-						else{
-							dis_scalata = distance-10;
-						}
-						
-						coeff = (1/23)*(dis_scalata);
-						
-						//ricalcolo
-						
-						
-						partialCount = partialCount *coeff;
-						//finito
-						break;
-					
+					}
+
+					//somma effettiva del punteggio
+					addPointToPlayer(play_id, partialCount, players);
 				}
 				
-				ArrayList<Qualifier> ev_qual = ev_work.getQua();
-				for(int g =0; g<ev_qual.size(); g++){
-					
-					Qualifier q = ev_qual.get(g);
-					
-					int qid = Integer.parseInt(q.getQualifier_id());
-					
-					QValues qv = new QValues(qid, Ioutcome);
-					
-					double result = mappaValoriQuali.get(qv);
-					
-					partialCount = partialCount + result;
-				}
-				
-				//somma effettiva del punteggio
-				addPointToPlayer(play_id, partialCount, players);
 				
 			}
+			
+			//addinc(players);
+			
+			//printScores(teams, on_work, players);
 			
 		}
 		
@@ -717,11 +623,37 @@ public class HackersAgricoliTrentini {
 	public static void addPointToPlayer(String id_player, double val, ArrayList<Player> lis){
 		for(int i=0; i<lis.size(); i++){
 			if(lis.get(i).getuID().equals(id_player)){
-				int g = lis.get(i).getScores().size();
-				double ne = lis.get(i).getScores().get(g) + val;
-				lis.get(i).getScores().add(g, ne);
+				lis.get(i).addScore(val);
+				lis.get(i).addEv();  
 			}
 		}
+	}
+	
+	public static void addinc( ArrayList<Player> lis){
+		for(int i=0; i<lis.size(); i++){
+			lis.get(i).incr();
+		}
+		
+	}
+	
+	public static void printScores(ArrayList<Team> teams, Game on_work,  ArrayList<Player> lis){
+		for(int j=0; j<teams.size(); j++){
+			if(teams.get(j).getuID().equals(on_work.getAway_team_id()) || teams.get(j).getuID().equals(on_work.getHome_team_id())){
+				for(int h=0; h<teams.get(j).getPlayers().size(); h++){
+					//addScoreToPlayer(teams.get(j).getPlayers().get(h).getuID(), players);
+					Player pl = getPl(teams.get(j).getPlayers().get(h).getuID(), lis);
+				}
+			}
+		}
+	}
+	
+	public static Player getPl(String id_player, ArrayList<Player> lis){
+		for(int i=0; i<lis.size(); i++){
+			if(lis.get(i).getuID().equals(id_player)){
+				return lis.get(i);
+			}
+		}
+		return null;
 	}
 	
 	public static void addScoreToPlayer(String id_player, ArrayList<Player> lis){
@@ -778,14 +710,7 @@ public class HackersAgricoliTrentini {
 	public static void printResult(ArrayList<Player> l){
 		
 		for(int i=0; i<l.size(); i++){
-			ArrayList<Double> scores = l.get(i).getScores();
-			if(scores.size()>0){
-				System.out.print(l.get(i).getName() + ":" );
-				for(int j=0; j<scores.size(); j++){
-					System.out.print(scores.get(j) + " , ");
-				}
-				System.out.println(" ");
-			}
+			System.out.println(l.get(i).getName() + ":" + l.get(i).getEv() + " score"+l.get(i).getScore());
 		}
 		
 	}
@@ -794,14 +719,14 @@ public class HackersAgricoliTrentini {
 		
 		if(mappaValoriEventi != null){
 			
-			mappaValoriEventi.put(new Values(1, 1, 1), 0.11); //pass successo difensivo
-			mappaValoriEventi.put(new Values(1, 1, 2), 0.12); //pass successo difensivo
-			mappaValoriEventi.put(new Values(1, 1, 3), 0.13); //pass successo difensivo
+			mappaValoriEventi.put(new Values(1, 1, 1), 0.011); //pass successo difensivo
+			mappaValoriEventi.put(new Values(1, 1, 2), 0.012); //pass successo difensivo
+			mappaValoriEventi.put(new Values(1, 1, 3), 0.013); //pass successo difensivo
 			
 			
-			mappaValoriEventi.put(new Values(1, 0, 1), -0.4); //pass in-successo difensivo
-			mappaValoriEventi.put(new Values(1, 0, 2), -0.3); //pass in-successo difensivo
-			mappaValoriEventi.put(new Values(1, 0, 3), -0.2); //pass in-successo difensivo
+			mappaValoriEventi.put(new Values(1, 0, 1), -0.04); //pass in-successo difensivo
+			mappaValoriEventi.put(new Values(1, 0, 2), -0.03); //pass in-successo difensivo
+			mappaValoriEventi.put(new Values(1, 0, 3), -0.02); //pass in-successo difensivo
 			
 			mappaValoriEventi.put(new Values(4, 0, 1), -1.0); //fallo difensivo
 			mappaValoriEventi.put(new Values(4, 0, 2), -0.5); //fallo difensivo
@@ -812,7 +737,7 @@ public class HackersAgricoliTrentini {
 			
 			mappaValoriEventi.put(new Values(10, 1, 0), 2.0); //save correlzione di moltiplicazione
 			
-			mappaValoriEventi.put(new Values(12, 1, 0), 1.5); //clearance
+			mappaValoriEventi.put(new Values(12, 1, 0), 0.15); //clearance
 			
 			mappaValoriEventi.put(new Values(13, 1, 0), -2.5); //miss con relazione precedente
 			
@@ -820,7 +745,8 @@ public class HackersAgricoliTrentini {
 			
 			mappaValoriEventi.put(new Values(15, 1, 0), 1.0); //attempt saved 
 			
-			mappaValoriEventi.put(new Values(16, 1, 0), 1.0); //goal
+			
+			mappaValoriEventi.put(new Values(16, 1, 0), 5.0);
 			
 			mappaValoriEventi.put(new Values(17, 1, 0), 0.0); // cartellini. rimanda ai qualifier
 			
@@ -848,6 +774,8 @@ public class HackersAgricoliTrentini {
 			
 			mappaValoriEventi.put(new Values(74, 1, 0), 0.4); //passaggio bloccato
 			
+			mappaValoriEventi.put(new Values(2, 0, 0), -0.5); //passaggio effettuato verso un giocatore in fuorigioco
+			
 			
 		}
 		else{	
@@ -855,5 +783,57 @@ public class HackersAgricoliTrentini {
 		}
 	}
 	
-	
+	public static void loadHashMap2(HashMap<QValues, Double> mappaValoriQualifier){
+		
+		if(mappaValoriQualifier != null){
+		
+			mappaValoriQualifier.put(new QValues(1, 1), 0.3); //passaggio lungo riuscito
+			mappaValoriQualifier.put(new QValues(1, 0), -0.3); // passaggio lungo non riuscito
+		
+			mappaValoriQualifier.put(new QValues(2, 1), 0.4); //cross riuscito
+			mappaValoriQualifier.put(new QValues(2, 0), -0.4); //cross non riuscito
+		
+			mappaValoriQualifier.put(new QValues(4, 1), 0.5); 
+			mappaValoriQualifier.put(new QValues(4, 0), -0.2);
+		
+			mappaValoriQualifier.put(new QValues(7, 0), -1.0); //giocatore pescato in fuorigioco
+		
+			mappaValoriQualifier.put(new QValues(215, 1), 1.5); //giocata individuale
+		
+			mappaValoriQualifier.put(new QValues(3, 1), 0.1); //punizione procurata
+		
+			mappaValoriQualifier.put(new QValues(196, 1), 0.1); //cambio di gioco riuscito
+			mappaValoriQualifier.put(new QValues(196, 0), -0.1); //cambio di gioco non riuscito
+		
+			mappaValoriQualifier.put(new QValues(210, 1), 2.0); // assist
+		
+			mappaValoriQualifier.put(new QValues(236, 0), -0.4); //passaggio bloccato
+		
+			mappaValoriQualifier.put(new QValues(28, 0), -4.0); //autogol
+		
+			mappaValoriQualifier.put(new QValues(254, 1), 0.5); //bonus al gol (preceduto da dribbling)
+		
+			mappaValoriQualifier.put(new QValues(261, 1), 0.25); //bonus al gol (uno contro uno col portiere)
+		
+			mappaValoriQualifier.put(new QValues(328, 1), 0.25); //bonus al gol (tiro di prima)
+		
+			mappaValoriQualifier.put(new QValues(101, 1), 2.5); //gol salvato sulla linea
+		
+			mappaValoriQualifier.put(new QValues(31, 0), -0.5); //cartellino giallo
+		
+			mappaValoriQualifier.put(new QValues(32, 0), -1.5); //secondo cartellino giallo
+		
+			mappaValoriQualifier.put(new QValues(33, 0), -2.5); //cartellino rosso
+		
+			mappaValoriQualifier.put(new QValues(186, 1), 4.0); //gol su rigore parato
+		
+			mappaValoriQualifier.put(new QValues(187, 0), -4.0); //gol su rigore subito
+		
+			mappaValoriQualifier.put(new QValues(169, 0), -1.5); 
+		
+			mappaValoriQualifier.put(new QValues(170, 0), -2.5);
+			
+		}
+		
+	}
 }

@@ -17,6 +17,11 @@ public class Player {
 	String name;
 	String position;
 	String num;
+	int ev=0;
+	
+	double score;
+	
+	int numS = 0;
 	
 	ArrayList<Double> scores;
 	
@@ -24,6 +29,7 @@ public class Player {
 	public Player(String uID) {
 		this.uID = uID;
 		scores = new ArrayList<>();
+		scores.add(0.0);
 	}
 
 	public void setuID(String uID) {
@@ -62,5 +68,34 @@ public class Player {
 		return scores;
 	}
 	
+	public void incr(){
+		numS++;
+		scores.add(0.0);
+	}
+	
+	public void addScore(double b){
+		
+		score = score +b;
+	}
+
+	public void setScore(double score) {
+		this.score = score;
+	}
+
+	public double getScore() {
+		return score;
+	}
+
+	public void setEv(int ev) {
+		this.ev = ev;
+	}
+
+	public int getEv() {
+		return ev;
+	}
+	
+	public void addEv(){
+		ev++;
+	}
 	
 }
